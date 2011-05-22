@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+	<title>Simon says</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
+	<style>
+		#colors {
+			float: left;
+			overflow: hidden;
+			width: 210px;
+		}
+		#colors li {
+			background-color: red;
+			list-style-type: none;
+			height: 100px;
+			float: left;
+			width: 100px;
+			margin-right: 5px;
+			margin-bottom: 5px;
+		}
+		#colors li.green { background-color: green; }
+		#colors li.blue { background-color: blue; }
+		#colors li.yellow { background-color: yellow; }
+		#main {
+			float: left;
+			margin-top: 15px;
+			width: 200px;
+			height: 205px;
+		}
+	</style>
+	<script>
+		var game = (function($) {
+			
+			var init = function() {
+			
+			};
+			
+			$(init);
+			
+		})(jQuery);
+		
+	</script>
+</head>
+<body>
+
+	<ul id="colors">
+		<li></li>
+		<li class="green"></li>
+		<li class="blue"></li>
+		<li class="yellow"></li>
+	</ul>
+	
+	<div id="main">
+	
+	</div>
+
+</body>
+</html>
