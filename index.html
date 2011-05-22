@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>Simon says</title>
+	<title>test</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.0/jquery.min.js"></script>
 	<style>
 		#colors {
@@ -11,6 +11,11 @@
 		}
 		#colors li {
 			background-color: red;
+			color: black;
+			cursor: auto;
+			font-size: 30px;
+			line-height: 100px;
+			list-style-position: inside;
 			list-style-type: none;
 			height: 100px;
 			float: left;
@@ -21,28 +26,110 @@
 		#colors li.green { background-color: green; }
 		#colors li.blue { background-color: blue; }
 		#colors li.yellow { background-color: yellow; }
+		#colors li.on { background-color: black; }
 		#main {
 			float: left;
 			margin-top: 15px;
+			margin-left: 20px;
 			width: 200px;
 			height: 205px;
 		}
+		p#start { cursor: pointer; color: blue; }
+		p#start:hover { text-decoration: underline; }
+
+		.playing #colors li {
+			cursor: pointer;
+		}
 	</style>
 	<script>
-		var game = (function($) {
-			
-			var init = function() {
+	
+		$(function() {
+			var colors = $('#colors li');
+			var mainColor = $('#main');
+			var start = $('#start');
+			var gameState = 'waiting';
+			var gameSequence = new Array();
+			var level = 1;
+			var t;
+			var flashNo;
+			var clickedNo;
+
+			var showLightSequence = function() {
+
+				// add next random number between 0 and 3 to the array
+				var randomNum =  Math.floor(Math.random() * 4);
+				gameSequence[level-1] = randomNum;
+				//console.log(randomNum);
+	
+				flashSquares();
+			};
+
+			var flashSquares = function() {
+				//console.log('entering flashSquares func');
+				colors.removeClass('on');
+		
+				if(flashNo < level) {
+					var on = setTimeout(function() { 
+						//console.log('turning light on ' + gameSequence[flashNo]);
+						colors.eq(gameSequence[flashNo]).addClass('on');
+						var off = setTimeout(function() { flashSquares();flashNo++; }, 500);
+					}, 500);
+				}
+				else {
+					gameState = 'playing';
+					$('body').addClass('playing');
+					start.text('Your turn...');
+					clearTimeout(on);
+				}
 			
 			};
+		
+			colors.click(function() {
+				if(gameState == 'playing') {
+					var selectedSquare = $(this).index();
 			
-			$(init);
-			
-		})(jQuery);
+					if(gameSequence[clickedNo] == selectedSquare) {
+						if(clickedNo == level-1) {
+							gameState = 'waiting';
+							$('body').removeClass('playing');
+							start.text('WELL DONE. Go to the next level >')
+							level++;
+
+						}
+						else {
+							clickedNo++;
+						}
+						mainColor.css('background-color', $(this).css('background-color'));
+					}
+					else {
+						gameState = 'waiting';
+						$('body').removeClass('playing');
+						start.text('GAME OVER. Try again?');
+						gameSequence = new Array();	
+					}
+				}
+			});
+
+			var init = function() {
+				$('#level').text('Level ' + level);
+				flashNo = 0;
+				clickedNo = 0;
+				mainColor.css('background-color', 'white');
+				$(this).text('Simon says...');
+				showLightSequence();
+			}
+
+			start.click(init);
+
+		});
 		
 	</script>
 </head>
 <body>
-
+	<p id="start">Start the game</p>
+	
+	<p id="level">Level 1</p>
+	
 	<ul id="colors">
 		<li></li>
 		<li class="green"></li>
